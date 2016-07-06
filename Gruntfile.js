@@ -26,13 +26,13 @@ module.exports = function(grunt) {
     eslint: {
       target: [
         // Add list of files to lint here
-
+        // testing 
       ]
     },
 
     cssmin: {
         // Add list of files to lint here
-        
+
     },
 
     watch: {
