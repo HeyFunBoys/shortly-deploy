@@ -36,7 +36,6 @@ module.exports = function(grunt) {
     eslint: {
       target: [
         'app/**/*.js',
-        'lib/*.js',
         'public/client/*.js',
         'test/*.js',
         '*.js'
@@ -67,6 +66,13 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+
+      },
+      addRemote: {
+        command: 'git remote add live ssh://root@45.55.21.244/root/bare'
+      },
+      connectServer: {
+        command: 'ssh root@45.55.21.244'
       }
     },
 
@@ -101,7 +107,13 @@ module.exports = function(grunt) {
     'eslint', // Checks for style guide errors
     'build', // Builds uglified view files
     'test', // Runs Mocha tests
-    'upload' // Starts server (unless 'grunt deploy --prod' is called, then runs gitpush)
+    'upload' // Starts server (if 'grunt deploy --prod' is called, runs gitpush instead of starting server)
+  ]);
+
+  // Grunt tasks to run on live server
+  grunt.registerTask('postDeploy', [
+    'build', // Builds uglified view files
+    'server-dev' // Starts nodemon and watch
   ]);
 
   // Runs concat and uglify (minify) on view scripts
@@ -114,6 +126,8 @@ module.exports = function(grunt) {
   grunt.registerTask('server-dev', function(target) {
     grunt.task.run([ 'nodemon', 'watch' ]);
   });
+
+  grunt.registerTask('init', ['shell:addRemote']);
 
   // Pushes code to live server if 'grunt deploy --prod' is called
   // Otherwise, if 'grunt' is called, starts server and runs watch
