@@ -3,6 +3,11 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: {separator: '\n'},
+      dist: {
+        src: ['public/client/*.js'],
+        dest: 'public/dist/<%= pkg.name %>.js'
+      }
     },
 
     mochaTest: {
@@ -21,6 +26,11 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      target: {
+        files: {
+          'public/dist/<%= pkg.name %>.min.js': ['public/client/*.js']
+        }
+      }
     },
 
     eslint: {
@@ -77,36 +87,34 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-git');
 
+  /***********************************************************
+    Main grunt tasks
+  ************************************************************/
+
+  grunt.registerTask('default', ['git-push', 'server-dev']);
+
   grunt.registerTask('server-dev', function(target) {
     grunt.task.run([ 'nodemon', 'watch' ]);
   });
 
   grunt.registerTask('git-push', ['gitpush']);
 
-  ////////////////////////////////////////////////////
-  // Main grunt tasks
-  ////////////////////////////////////////////////////
+  grunt.registerTask('test', ['mochaTest']);
 
-  grunt.registerTask('default', ['server-dev', 'git-push']);
+  grunt.registerTask('build', ['concat', 'uglify']);
 
-  // grunt.registerTask('test', [
-  //   'mochaTest'
-  // ]);
+  grunt.registerTask('upload', function(n) {
+    if (grunt.option('prod')) {
+      // add your production server task here
+    } else {
+      grunt.task.run([ 'server-dev' ]);
+    }
+  });
 
-  // grunt.registerTask('build', [
-  // ]);
+  grunt.registerTask('deploy', [
+    // add your production server task here
 
-  // grunt.registerTask('upload', function(n) {
-  //   if (grunt.option('prod')) {
-  //     // add your production server task here
-  //   } else {
-  //     grunt.task.run([ 'server-dev' ]);
-  //   }
-  // });
-
-  // grunt.registerTask('deploy', [
-  //     // add your production server task here
-  // ]);
+  ]);
 
 
 };
