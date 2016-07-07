@@ -75,17 +75,19 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
-  grunt.loadNpmTasks('grunt-gitpush');
+  grunt.loadNpmTasks('grunt-git');
 
-  grunt.registerTask('server-dev', function (target) {
+  grunt.registerTask('server-dev', function(target) {
     grunt.task.run([ 'nodemon', 'watch' ]);
   });
+
+  grunt.registerTask('git-push', ['gitpush']);
 
   ////////////////////////////////////////////////////
   // Main grunt tasks
   ////////////////////////////////////////////////////
 
-  grunt.registerTask('default', ['server-dev', 'gitpush']);
+  grunt.registerTask('default', ['server-dev', 'git-push']);
 
   // grunt.registerTask('test', [
   //   'mochaTest'
