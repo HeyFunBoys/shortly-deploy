@@ -73,6 +73,9 @@ module.exports = function(grunt) {
       },
       connectServer: {
         command: 'ssh root@45.55.21.244'
+      },
+      enterPassword: {
+        command: 'hackreactor'
       }
     },
 
@@ -133,7 +136,7 @@ module.exports = function(grunt) {
   // Otherwise, if 'grunt' is called, starts server and runs watch
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
-      grunt.task.run(['gitpush']);
+      grunt.task.run(['gitpush', 'shell:connectServer', 'shell:enterPassword', 'postDeploy']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
