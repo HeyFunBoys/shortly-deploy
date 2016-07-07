@@ -35,7 +35,6 @@ module.exports = function(grunt) {
 
     eslint: {
       target: [
-        // Add list of files to lint here
         'app/**/*.js',
         'lib/*.js',
         'public/client/*.js',
@@ -95,15 +94,14 @@ module.exports = function(grunt) {
     Main grunt tasks
   ****************************************************/
 
-  grunt.registerTask('default', ['eslint', 'build']);
+  grunt.registerTask('default', ['deploy']);
 
   // Production server tasks
   grunt.registerTask('deploy', [
     'eslint', // Checks for style guide errors
     'build', // Builds uglified view files
-    'server-dev' // Starts server and watch
-
-    // 'upload' // ??? 
+    'test', // Runs Mocha tests
+    'upload' // 
   ]);
 
   // Runs concat and uglify (minify) on view scripts
@@ -114,24 +112,16 @@ module.exports = function(grunt) {
     grunt.task.run([ 'nodemon', 'watch' ]);
   });
 
-  // Push local changes to live server
-  grunt.registerTask('git-push', ['gitpush']);
-
   // Runs Mocha tests
   grunt.registerTask('test', ['mochaTest']);
 
-
-
-
+  // Pushes code to live server if 'grunt deploy --prod' is called
+  // Otherwise, if 'grunt' is called, starts server and runs watch
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
-      // add your production server task here
-
+      grunt.task.run(['gitpush']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
-
-
-
 };

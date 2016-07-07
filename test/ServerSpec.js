@@ -13,7 +13,7 @@ var Link = require('../app/models/link');
 
 var User = require('../app/models/user');
 var Link = require('../app/models/link');
-describe('', function() {
+xdescribe('', function() {
 
   beforeEach(function(done) {
     // Log out currently signed in user
