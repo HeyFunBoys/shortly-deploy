@@ -73,9 +73,6 @@ module.exports = function(grunt) {
       },
       connectServer: {
         command: 'ssh root@45.55.21.244'
-      },
-      enterPassword: {
-        command: 'hackreactor'
       }
     },
 
@@ -104,6 +101,7 @@ module.exports = function(grunt) {
   ****************************************************/
 
   grunt.registerTask('default', ['deploy']);
+  grunt.registerTask('init', ['shell:addRemote']);
 
   // Production server tasks
   grunt.registerTask('deploy', [
@@ -114,7 +112,7 @@ module.exports = function(grunt) {
   ]);
 
   // Grunt tasks to run on live server
-  grunt.registerTask('postDeploy', [
+  grunt.registerTask('liveServer', [
     'build', // Builds uglified view files
     'server-dev' // Starts nodemon and watch
   ]);
@@ -130,13 +128,11 @@ module.exports = function(grunt) {
     grunt.task.run([ 'nodemon', 'watch' ]);
   });
 
-  grunt.registerTask('init', ['shell:addRemote']);
-
   // Pushes code to live server if 'grunt deploy --prod' is called
   // Otherwise, if 'grunt' is called, starts server and runs watch
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
-      grunt.task.run(['gitpush', 'shell:connectServer', 'shell:enterPassword', 'postDeploy']);
+      grunt.task.run(['gitpush']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
