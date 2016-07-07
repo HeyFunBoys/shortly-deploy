@@ -101,19 +101,19 @@ module.exports = function(grunt) {
     'eslint', // Checks for style guide errors
     'build', // Builds uglified view files
     'test', // Runs Mocha tests
-    'upload' // 
+    'upload' // Starts server (unless 'grunt deploy --prod' is called, then runs gitpush)
   ]);
 
   // Runs concat and uglify (minify) on view scripts
   grunt.registerTask('build', ['concat', 'uglify']);
+
+  // Runs Mocha tests
+  grunt.registerTask('test', ['mochaTest']);
   
   // Starts server (via nodemon) and runs watch
   grunt.registerTask('server-dev', function(target) {
     grunt.task.run([ 'nodemon', 'watch' ]);
   });
-
-  // Runs Mocha tests
-  grunt.registerTask('test', ['mochaTest']);
 
   // Pushes code to live server if 'grunt deploy --prod' is called
   // Otherwise, if 'grunt' is called, starts server and runs watch
