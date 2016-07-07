@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         options: {
           reporter: 'spec'
         },
-        src: ['test/**/*.js']
+        src: ['test/*.js']
       }
     },
 
@@ -36,7 +36,11 @@ module.exports = function(grunt) {
     eslint: {
       target: [
         // Add list of files to lint here
-        
+        'app/**/*.js',
+        'lib/*.js',
+        'public/client/*.js',
+        'test/*.js',
+        '*.js'
       ]
     },
 
@@ -87,34 +91,47 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-git');
 
-  /***********************************************************
+  /****************************************************
     Main grunt tasks
-  ************************************************************/
+  ****************************************************/
 
-  grunt.registerTask('default', ['git-push', 'server-dev']);
+  grunt.registerTask('default', ['eslint', 'build']);
 
+  // Production server tasks
+  grunt.registerTask('deploy', [
+    'eslint', // Checks for style guide errors
+    'build', // Builds uglified view files
+    'server-dev' // Starts server and watch
+
+    // 'upload' // ??? 
+  ]);
+
+  // Runs concat and uglify (minify) on view scripts
+  grunt.registerTask('build', ['concat', 'uglify']);
+  
+  // Starts server (via nodemon) and runs watch
   grunt.registerTask('server-dev', function(target) {
     grunt.task.run([ 'nodemon', 'watch' ]);
   });
 
+  // Push local changes to live server
   grunt.registerTask('git-push', ['gitpush']);
 
+  // Runs Mocha tests
   grunt.registerTask('test', ['mochaTest']);
 
-  grunt.registerTask('build', ['concat', 'uglify']);
+
+
 
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
       // add your production server task here
+
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', [
-    // add your production server task here
-
-  ]);
 
 
 };
